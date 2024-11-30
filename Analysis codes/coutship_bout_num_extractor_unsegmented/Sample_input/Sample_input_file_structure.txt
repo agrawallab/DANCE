@@ -1,0 +1,17 @@
+DD/MM/YYYY/
+├── video_1/
+│   └── video_1_JAABA/
+│       ├── score_1.mat
+│       └── score_2.mat
+├── video_2/
+│   └── video_2_JAABA/
+│       ├── score_1.mat
+│       └── score_2.mat
+├── video_3/
+│   └── video_3_JAABA/
+│       ├── score_1.mat
+│       └── score_2.mat
+└── video_4/
+    └── video_4_JAABA/
+│       ├── score_1.mat
+│       └── score_2.mat

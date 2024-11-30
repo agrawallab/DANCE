@@ -1,0 +1,39 @@
+ParentFolder/
+├── DD-MM-YYYY/
+│   ├── video_1/
+│   │   ├── cropped_video_1/
+│   │   │   └── cropped_video_1_JAABA/
+│   │   │       ├── scores_AC_10.mat
+│   │   │       ├── scores_C_v4.mat
+│   │   │       ├── scores_Circling.mat
+│   │   │       ├── scores_Following14.mat
+│   │   │       ├── scores_WingExt_26.mat
+│   │   │       └── other_data_file.mat
+│   │   ├── cropped_video_2/
+│   │   │   └── cropped_video_2_JAABA/
+│   │   │       ├── scores_AC_10.mat
+│   │   │       ├── scores_C_v4.mat
+│   │   │       └── ...
+│   │   ├── cropped_video_3/
+│   │   │   └── cropped_video_3_JAABA/
+│   │   │       ├── scores_AC_10.mat
+│   │   │       ├── scores_Following14.mat
+│   │   │       └── ...
+│   ├── video_2/
+│   │   ├── cropped_video_1/
+│   │   │   └── cropped_video_1_JAABA/
+│   │   │       ├── scores_AC_10.mat
+│   │   │       ├── scores_WingExt_26.mat
+│   │   │       └── ...
+│   │   ├── cropped_video_2/
+│   │   │   └── cropped_video_2_JAABA/
+│   │   │       ├── scores_Circling.mat
+│   │   │       ├── scores_Following14.mat
+│   │   │       └── ...
+│   └── video_3/
+│       ├── cropped_video_1/
+│       │   └── cropped_video_1_JAABA/
+│       │       ├── scores_AC_10.mat
+│       │       ├── scores_Following14.mat
+│       │       └── ...
+│       └── ...

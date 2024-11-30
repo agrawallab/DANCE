@@ -1,0 +1,36 @@
+---
+
+Directory Structure
+The script assumes the following directory structure:
+
+mainFolder/
+├── Subfolder1/
+│   ├── score_1.mat
+│   ├── score_2.mat
+│   └── ...
+├── Subfolder2/
+│   ├── score_1.mat
+│   ├── score_2.mat
+│   └── ...
+└── ...
+
+Each subfolder contains `.mat` files that will be processed.
+
+---
+
+Example Output
+For a `.mat` file named `example.mat` containing:
+allScores.t0s = {[1, 2, 3], [4, 5]};
+allScores.t1s = {[6, 7], [8, 9, 10]};
+The script will generate:
+- `example_Fly1.csv`:
+  1,6
+  2,7
+  3,NaN
+
+- `example_Fly2.csv`:
+  4,8
+  5,9
+  NaN,10
+
+---
