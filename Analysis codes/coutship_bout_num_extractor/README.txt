@@ -1,5 +1,5 @@
-README.txt
-==========
+Coutship_bout_num_extractor
+===========================
 
 Script Description
 -------------------

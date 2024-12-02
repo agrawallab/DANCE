@@ -1,5 +1,5 @@
-README: 
 This code is the same as courtship_bout_num_extractor except, it works for unsegmented videos (raw videos)
+==========================================================================================================
 
 Overview
 --------
