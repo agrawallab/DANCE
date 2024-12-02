@@ -1,3 +1,7 @@
+DANCE: Drosophila Aggresion and Courtship Evaluvator
+
+The following are the codes that have been used for various steps during the development and testing of the aggrssion and courtship classifiers.
+
 I. Ground-Truthing Labels
 
 1. extractLabels
