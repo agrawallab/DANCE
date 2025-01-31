@@ -97,7 +97,7 @@ SimplyFly_cropper_v4.py)**
 -   Double-click on **cropper.py**. This will open the script in your
     Python IDE (we used Visual Studio code as our IDE).
 
-<img width="445" alt="image" src="https://github.com/user-attachments/assets/d61b172e-2b80-4b6c-9fb8-6e2a9a023e0e" />
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/d61b172e-2b80-4b6c-9fb8-6e2a9a023e0e" />
 
 
 -   In **Visual Studio Code**, click on the **Play** button at the top
