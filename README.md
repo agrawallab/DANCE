@@ -19,6 +19,8 @@
 •	DANCE preprint details the hardware components and recording requirements.
 
 •	Behavioral Classifiers: Our JAABA-based classifiers (.jab) files are used to quantify aggression and courtship.
+   
+   They can be downloaded at https://drive.google.com/drive/folders/1N75OinwMuYrkIT3qclAJThCvfOZMuotj?usp=drive_link  
 
 •	Please download following software to get started with the DANCE pipeline: 
 
@@ -26,7 +28,7 @@
   
    JAABA: Janelia Automatic Animal Behavior Annotator https://github.com/kristinbranson/JAABA
   
-•	Step by step analysis instructions: Please see the ‘README.md’ file. 
+•	Step by step analysis instructions: Please see the ‘DANCE_Analysis_step-by-step_instructions.md’ file. 
 
 
 **Citing DANCE**
