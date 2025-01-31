@@ -97,8 +97,8 @@ SimplyFly_cropper_v4.py)**
 -   Double-click on **cropper.py**. This will open the script in your
     Python IDE (we used Visual Studio code as our IDE).
 
-![](media/image1.png){width="6.194763779527559in"
-height="3.480203412073491in"}
+<img width="445" alt="image" src="https://github.com/user-attachments/assets/d61b172e-2b80-4b6c-9fb8-6e2a9a023e0e" />
+
 
 -   In **Visual Studio Code**, click on the **Play** button at the top
     left to run the Python file.
@@ -144,8 +144,8 @@ height="3.480203412073491in"}
 -   A dialog box will appear. Click on **Video Folder**, select the
     appropriate folder, and click **Select Folder**.
 
-![](media/image2.png){width="5.807086614173229in"
-height="3.1496062992125986in"}
+<img width="418" alt="image" src="https://github.com/user-attachments/assets/1635785a-0051-4493-804e-1d092ef408b6" />
+
 
 **4. Calibration in FlyTracker (see FlyTracker:
 https://kristinbranson.github.io/FlyTracker/)**
@@ -153,13 +153,13 @@ https://kristinbranson.github.io/FlyTracker/)**
 -   Click **Calibrate**. A dialog box titled **\"Loading Calibrator\"**
     will appear.
 
-![](media/image3.png){width="5.846456692913386in"
-height="3.1496062992125986in"}
+<img width="421" alt="image" src="https://github.com/user-attachments/assets/845f61b6-871d-4901-ba3c-004aa8272129" />
+
 
 -   A chamber outline with red markers will be displayed.
 
-![](media/image4.png){width="5.791338582677166in"
-height="3.1496062992125986in"}
+<img width="417" alt="image" src="https://github.com/user-attachments/assets/36993a3a-6d53-439e-93a5-1c868ec9b5b6" />
+
 
 -   Click and drag the red markers to align with the chamber's right and
     left boundaries.
@@ -169,8 +169,8 @@ height="3.1496062992125986in"}
 
 -   Click **Continue**.
 
-![](media/image5.png){width="5.818897637795276in"
-height="3.1496062992125986in"}
+<img width="419" alt="image" src="https://github.com/user-attachments/assets/e43157ed-e208-433e-bd5c-b3376f42491b" />
+
 
 -   A **Progress** dialog box will appear, displaying **\"Computing
     background image\"**.
@@ -181,8 +181,8 @@ height="3.1496062992125986in"}
 -   Once completed, a **Background** model with Bg Mean, Bg Var, and a
     Sample Image will be shown.
 
-![](media/image6.png){width="5.818897637795276in"
-height="3.1496062992125986in"}
+<img width="419" alt="image" src="https://github.com/user-attachments/assets/b444f604-a6c4-45ee-8c70-bc1a045c8b23" />
+
 
 **5. Experimental setup in FlyTracker**
 
@@ -206,8 +206,8 @@ height="3.1496062992125986in"}
 
 -   Click **Continue**.
 
-![](media/image7.png){width="4.271653543307087in"
-height="3.1496062992125986in"}
+<img width="308" alt="image" src="https://github.com/user-attachments/assets/b7b8813f-fd19-402c-8484-f6df670ea47c" />
+
 
 **6. Parameter Tuning and Tracking**
 
@@ -217,8 +217,8 @@ height="3.1496062992125986in"}
 
 -   Click **Finish**.
 
-![](media/image8.png){width="4.303149606299213in"
-height="3.1496062992125986in"}
+<img width="310" alt="image" src="https://github.com/user-attachments/assets/841b738c-1ad3-4c69-a625-1276c0a1303e" />
+
 
 -   A dialog box will appear: **\"Finalizing Calibration\"**.
 
@@ -232,7 +232,8 @@ height="3.1496062992125986in"}
     folder, containing a perframe folder with perframe features and a
     trx.mat file.
 
-![](media/image9.png){width="4.78125in" height="4.916666666666667in"}
+<img width="345" alt="image" src="https://github.com/user-attachments/assets/f87de5b1-304b-45df-94b9-8103d04c20b7" />
+
 
 **7.** **Generating score files using JAABA**
 
@@ -255,8 +256,8 @@ height="3.1496062992125986in"}
 -   Double-click on the folder, add the **JAABA** subfolder and press
     **Done**. This step ensures that all JAABA folders are added.
 
-![](media/image10.png){width="4.47244094488189in"
-height="3.1496062992125986in"}
+<img width="322" alt="image" src="https://github.com/user-attachments/assets/f8eac140-2650-4e9e-97c0-edb9e363417e" />
+
 
 -   Under the **Classifiers** section, click **Add** and navigate to the
     **lunge** or **courtship** classifiers to quantify behaviors.
@@ -267,8 +268,8 @@ height="3.1496062992125986in"}
     master video directory, alongside the perframe folder and trx.mat
     file.
 
-![](media/image11.png){width="6.003937007874016in"
-height="3.1496062992125986in"}
+<img width="433" alt="image" src="https://github.com/user-attachments/assets/bfcbf35b-2f39-4d73-babe-67ac79be4fe1" />
+
 
 **8. Lunge behavior quantification**
 
