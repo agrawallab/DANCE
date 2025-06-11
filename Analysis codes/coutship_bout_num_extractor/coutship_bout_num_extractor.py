@@ -7,7 +7,7 @@ import glob
 import matlab.engine
 
 # Change this as required
-classifier_names = ["scores_AC_10", "scores_C_v4", "scores_Circling", "scores_Following14", "scores_WingExt_26"]
+classifier_names = ["scores_Attempted_copulation", "scores_Copulation", "scores_Circling", "scores_Following", "scores_WingExt"] 
 
 def rename_files_recursively(root_path):
     # Create score files folder
