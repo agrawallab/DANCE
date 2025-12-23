@@ -39,8 +39,9 @@ DANCE: An open-source analysis pipeline and low-cost hardware to quantify aggres
 
 This repository contains the analysis codes used in the following publication:
 
-Yadav R Sai Prathap, Dey Paulami, Ansari Faizah, Kottat Tanvi, Prabhu P Pallavi, Vasam Manohar, Ayyangar Shrinivas, Swathi Bhaskar S, Prabhu Krishnananda, Ghosh Monalisa, Agrawal Pavan (2025)  eLife 14:RP105465
-**DANCE: An open-source analysis pipeline and low-cost hardware to quantify aggression and courtship in Drosophila**.  
+R Sai Prathap Yadav, Paulami Dey, Faizah Ansar, Tanvi Kottat, Manohar Vasam, P Pallavi Prabhu, Shrinivas Ayyangar, Swathi Bhaskar S, Krishnananda Prabhu, Monalisa Ghosh, Pavan Agrawal*
+(2025)
+**DANCE provides an open-source and low-cost approach to quantify aggression and courtship in Drosophila**.  
 *eLife*.  
 DOI: pending
 
