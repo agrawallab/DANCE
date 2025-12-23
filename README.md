@@ -35,6 +35,17 @@
 **Preprint:** 
 DANCE: An open-source analysis pipeline and low-cost hardware to quantify aggression and courtship in Drosophila’, Yadav, R.S.P., Dey P., Ansari F., Kottat T., Prabhu PP., Vasam M., Ayyangar, S., Bhaskar S, S., Prabhu, K., Ghosh, M. and Agrawal, P.  doi: https://doi.org/10.1101/2025.01.03.631168, bioRxiv, January 4th, 2025. 
 
+**eLife publication**
+
+This repository contains the analysis codes used in the following publication:
+
+Yadav R Sai Prathap, Dey Paulami, Ansari Faizah, Kottat Tanvi, Prabhu P Pallavi, Vasam Manohar, Ayyangar Shrinivas, Swathi Bhaskar S, Prabhu Krishnananda, Ghosh Monalisa, Agrawal Pavan (2025)  eLife 14:RP105465
+**DANCE: An open-source analysis pipeline and low-cost hardware to quantify aggression and courtship in Drosophila**.  
+*eLife*.  
+DOI: pending
+
+The version of this repository used for the paper has been archived at Software Heritage as part of the eLife publication process.
+
 **Patent information**
 
 The hardware is described in a patent application with the Indian Patent Office, titled: ‘Device for Measuring Complex Social Behaviors In Small Insects’. 
