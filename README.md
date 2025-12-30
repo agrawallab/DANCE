@@ -40,7 +40,7 @@ R Sai Prathap Yadav, Paulami Dey, Faizah Ansar, Tanvi Kottat, Manohar Vasam, P P
 (2025)
 **DANCE provides an open-source and low-cost approach to quantify aggression and courtship in Drosophila**.  
 *eLife*.  
-DOI:  https://doi.org/10.7554/eLife.105465.3
+DOI:  [https://doi.org/10.7554/eLife.105465.3](https://doi.org/10.7554/eLife.105465.3)
 
 The version of this repository used for the paper has been archived at Software Heritage as part of the eLife publication process.
 
