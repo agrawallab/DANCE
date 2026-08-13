@@ -2,6 +2,7 @@
 
 from openpyxl import Workbook
 import os
+import argparse
 
 def create_excel_with_sheets(sheet_names, file_path):
     # Create a new Workbook object
@@ -30,17 +31,18 @@ def create_excel_with_sheets(sheet_names, file_path):
     print(f"Excel file '{file_path}' with specified sheets and common header created successfully.")
 
 def main():
+    parser = argparse.ArgumentParser(description="Create an Excel workbook with predefined sheet names.")
+    # Supply the folder where the workbook should be saved
+    parser.add_argument("output_dir",  help="Folder where the Excel file will be saved")
+    # Supply the filename for the workbook
+    parser.add_argument("file_name",   help="Name for the output Excel file (e.g. MyWorkbook.xlsx)")
+    args = parser.parse_args()
+
     # Input sheet names
     sheet_names = ['Chamber_10', 'Chamber_11', 'Chamber_14', 'Chamber_1', 'test1', 'test2', 'test3_10', 'test3_11', 'test3_1', 'test7V_3', 'test7V_4', 'test7V_8', 'test7V_9', 'test7V_13', 'test_10', 'test9_15', 'testDVGH_10', 'testDVGH_11', 'testDV_1', 'testDV_2', 'testDV_4', 'testDV_5', 'test_SH_4', 'test_SH_5', 'test_SH_7']
 
-      # Directory path to save the Excel file 
-    directory_path = r"E:\Paulami\Ground-truthing Data\Single Blind\10 mm chamber\Manohar\Copulation\28112024"
-
-    # File name for the Excel file
-    file_name = "Copulation_SB_Workbook.xlsx"
-
     # Combine directory path and file name
-    file_path = os.path.join(directory_path, file_name)
+    file_path = os.path.join(args.output_dir, args.file_name)
 
     # Create Excel file with specified sheet names and common header
     create_excel_with_sheets(sheet_names, file_path)

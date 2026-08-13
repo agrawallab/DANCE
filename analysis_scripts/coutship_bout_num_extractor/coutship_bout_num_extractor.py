@@ -1,139 +1,347 @@
-# Last edited by Paulami Dey on 28/11/2024
+# Last edited by Paulami Dey on 12/08/2026
 
 import os
 import shutil
 import csv
 import glob
-import matlab.engine
+import scipy.io
+import numpy as np
 
 # Change this as required
 classifier_names = ["scores_Attempted_copulation", "scores_Copulation", "scores_Circling", "scores_Following", "scores_WingExt"] 
 
 def rename_files_recursively(root_path):
-    # Create score files folder
+
     score_folder = "score_files"
     new_path = os.path.join(root_path, score_folder)
-    
+
     if os.path.exists(new_path):
         shutil.rmtree(new_path)
-        print("Score_files_folder already exists, deleting old data")
-    
-    os.mkdir(new_path)  # Make a new score_files directory
+        print("score_files folder already exists, deleting old data")
+
+    os.makedirs(new_path, exist_ok=True)
     print(f"Created directory: {new_path}")
 
-    for dir in os.listdir(root_path):
-        dir_path = os.path.join(root_path, dir)
-        if os.path.isdir(dir_path):
-            for subdir in os.listdir(dir_path):
-                subdir_path = os.path.join(dir_path, subdir)
-                if os.path.isdir(subdir_path):
-                    for folder in os.listdir(subdir_path):
-                        folder_path = os.path.join(subdir_path, folder)
-                        if os.path.isdir(folder_path):
-                            for sub_folder in os.listdir(folder_path):
-                                sub_folder_path = os.path.join(folder_path, sub_folder)
-                                if os.path.isdir(sub_folder_path): 
-                                    for file in os.listdir(sub_folder_path):
-                                        file_path = os.path.join(sub_folder_path, file)
-                                        name, extension = os.path.splitext(file)
-                                        for classifier_name in classifier_names:
-                                            if classifier_name in name:
-                                                new_name = os.path.join(new_path, f"{dir}_{subdir}_{name}{extension}")
-                                                # os.rename(file_path, new_name)
-                                                print(name, new_name)
-                                                shutil.copy(file_path, new_name)
-                                                break  # Move to next file after copying
+    copied_files = 0
+    jaaba_folders_found = 0
 
-    print(f"Score files were renamed and copied to {new_path}")
+    for current_root, dirs, files in os.walk(root_path):
+
+        # Skip the output score_files folder
+        if os.path.abspath(current_root).startswith(os.path.abspath(new_path)):
+            continue
+
+        # Only look inside folders ending with _JAABA
+        if os.path.basename(current_root).endswith("_JAABA"):
+
+            jaaba_folders_found += 1
+            jaaba_folder_name = os.path.basename(current_root)
+
+            print(f"\nFound JAABA folder: {current_root}")
+
+            # Search everything inside this JAABA folder
+            for jaaba_root, jaaba_dirs, jaaba_files in os.walk(current_root):
+
+                for file in jaaba_files:
+
+                    name, extension = os.path.splitext(file)
+
+                    for classifier_name in classifier_names:
+
+                        if classifier_name in name:
+
+                            file_path = os.path.join(jaaba_root, file)
+
+                            video_name = jaaba_folder_name.replace("_JAABA", "")
+
+                            new_name = os.path.join(
+                                new_path,
+                                f"{video_name}_{file}"
+                            )
+
+                            print(f"Copying: {file}")
+                            print(f" -> {new_name}")
+
+                            shutil.copy2(file_path, new_name)
+
+                            copied_files += 1
+                            break
+
+    print("\n------------------------------------")
+    print(f"JAABA folders found: {jaaba_folders_found}")
+    print(f"Score files copied: {copied_files}")
+    print(f"Output folder: {new_path}")
+    print("------------------------------------")
+
+    if jaaba_folders_found == 0:
+        print("WARNING: No folders ending with '_JAABA' were found.")
+
+    if copied_files == 0:
+        print("WARNING: JAABA folders were found, but no matching score files were found.")
+
+def sheet_maker(folder_path):
+    """Reads JAABA .mat score files in folder_path and writes one CSV per .mat file.
+    Row 0 = Fly1 bout frame numbers, row 1 = Fly2 bout frame numbers.
+    Uses allScores.scores > 0 to find bout frames (robust for single-frame classifiers
+    where t0s/t1s can be empty after post-processing)."""
+    for mat_file in glob.glob(os.path.join(folder_path, '*.mat')):
+        base_name = os.path.splitext(os.path.basename(mat_file))[0]
+        out_filename = os.path.join(folder_path, base_name + ".csv")
+        try:
+            data = scipy.io.loadmat(mat_file, squeeze_me=True, struct_as_record=False)
+            all_scores = data['allScores']
+            if hasattr(all_scores, 'scores') and hasattr(all_scores, 'tStart'):
+                t_start = np.atleast_1d(all_scores.tStart)
+                scores_list = np.atleast_1d(all_scores.scores)
+                rows = []
+                for idx in range(len(scores_list)):
+                    fly_scores = np.atleast_1d(scores_list[idx]).flatten()
+                    bout_frames = (np.where(fly_scores > 0)[0] + int(t_start[idx])).tolist()
+                    rows.append(bout_frames)
+                with open(out_filename, 'w', newline='') as f:
+                    csv.writer(f).writerows(rows)
+            else:
+                print(f"File {mat_file} does not contain expected fields: scores or tStart")
+        except NotImplementedError:
+            print(f"File {mat_file} is MATLAB v7.3 (HDF5) format — install h5py to read it")
+        except Exception as e:
+            print(f"Error processing file {mat_file}: {e}")
 
 def extract_lunge_frames_to_csv(root_path):
-    os.chdir(os.path.join(root_path, "score_files"))
-    eng = matlab.engine.start_matlab()
-    eng.SheetMaker(nargout=0)
-    eng.quit()
+    sheet_maker(os.path.join(root_path, "score_files"))
 
 def compile_csv_files(root_path):
+
     path = os.path.join(root_path, "score_files")
-    extension = 'csv'
     os.chdir(path)
-    filenames = glob.glob(f'*.{extension}')
-    print(filenames)
 
-    list_of_males =[]
-        
+    filenames = glob.glob("*.csv")
+
+    print(f"\nTotal CSV files found: {len(filenames)}")
+
+    # ==================================================
+    # STEP 1: Find male identity from WingExt
+    # ==================================================
+
+    male_by_chamber = {}
+
+    wing_files = sorted([
+        file for file in filenames
+        if "scores_WingExt" in file
+    ])
+
+    print(f"WingExt files found: {len(wing_files)}")
+
+    for file in wing_files:
+
+        # Example:
+        # Video_1_1min_chamber_3_scores_WingExt.mat.csv
+        #
+        # chamber_name becomes:
+        # Video_1_1min_chamber_3
+
+        chamber_name = file.split("_scores_WingExt")[0]
+
+        rows = []
+
+        with open(file, "r") as csvfile:
+            csvreader = csv.reader(csvfile)
+
+            for row in csvreader:
+                rows.append(row)
+
+        # WingExt should contain Fly1 + Fly2 rows
+        if len(rows) < 2:
+            print(f"WARNING: Invalid WingExt file: {file}")
+            continue
+
+        # --------------------------------------------------
+        # Count WingExt bouts for Fly 1 and Fly 2
+        # --------------------------------------------------
+
+        wingext1 = 0
+        wingext2 = 0
+
+        for col in rows[0]:
+            if col != "NaN":
+                wingext1 += 1
+
+        for col in rows[1]:
+            if col != "NaN":
+                wingext2 += 1
+
+        # --------------------------------------------------
+        # More WingExt bouts = male
+        # --------------------------------------------------
+
+        if wingext1 > wingext2:
+            male_by_chamber[chamber_name] = 0
+            male = "Fly1"
+
+        else:
+            male_by_chamber[chamber_name] = 1
+            male = "Fly2"
+
+        print(
+            f"{chamber_name}: "
+            f"Fly1 WingExt = {wingext1}, "
+            f"Fly2 WingExt = {wingext2} "
+            f"--> Male = {male}"
+        )
+
+    # ==================================================
+    # STEP 2: Show which classifiers exist per chamber
+    # ==================================================
+
+    print("\n======================================")
+    print("CHECKING CLASSIFIERS PER CHAMBER")
+    print("======================================")
+
+    all_chambers = set()
+
     for file in filenames:
-        if "scores_WingExt" in file:
-            filename = str(file)
-            rows = []
-            # Reading CSV file
-            with open(filename, 'r') as csvfile:
-                csvreader = csv.reader(csvfile)
-                for row in csvreader:
-                    rows.append(row)
+        for classifier_name in classifier_names:
+            if classifier_name in file:
 
-            for n in range(0, len(rows), 2):
-                lunges1 = 0
-                lunges2 = 0
-                for col in rows[n]:
-                    if col != "NaN":
-                        lunges1 += 1
-                for col in rows[n + 1]:
-                    if col != "NaN":
-                        lunges2 += 1
-                if lunges1>lunges2:
-                    list_of_males.append(0)
-                else:
-                    list_of_males.append(1)
-        
-    print(list_of_males)
+                chamber_name = file.split(
+                    f"_{classifier_name}"
+                )[0]
+
+                all_chambers.add(chamber_name)
+                break
+
+    for chamber_name in sorted(all_chambers):
+
+        print(f"\n{chamber_name}")
+
+        for classifier_name in classifier_names:
+
+            found = any(
+                file.startswith(chamber_name + "_")
+                and classifier_name in file
+                for file in filenames
+            )
+
+            if found:
+                print(f"   ✓ {classifier_name}")
+            else:
+                print(f"   ✗ MISSING: {classifier_name}")
+
+        if chamber_name not in male_by_chamber:
+            print("   !!! NO VALID WingExt → male cannot be identified")
+
+    # ==================================================
+    # STEP 3: Compile classifier files
+    # ==================================================
+
+    print("\n======================================")
+    print("COMPILING FILES")
+    print("======================================")
 
     for classifier_name in classifier_names:
+
         new_filename = f"{classifier_name}_compiled.csv"
         new_rows = []
 
-        i = 0
-        for file in filenames:
-            if classifier_name in file:
-                i = i+1
-                filename = str(file)
-                rows = []
-                # Reading CSV file
-                with open(filename, 'r') as csvfile:
-                    csvreader = csv.reader(csvfile)
-                    for row in csvreader:
-                        rows.append(row)
-                
-                new_row = [f"{filename}_Fly1_Fly2"]
+        classifier_files = sorted([
+            file for file in filenames
+            if classifier_name in file
+        ])
 
-                for n in range(0, len(rows), 2):
-                    lunges1 = 0
-                    lunges2 = 0
-                    for col in rows[n]:
-                        if col != "NaN":
-                            lunges1 += 1
-                    for col in rows[n + 1]:
-                        if col != "NaN":
-                            lunges2 += 1
-                    new_row.append(lunges1)
-                    new_row.append(lunges2)
-                    if list_of_males[i-1] == 0:
-                        new_row.append(lunges1)
-                    else:
-                        new_row.append(lunges2)
-                new_rows.append(new_row)
+        for file in classifier_files:
 
-        with open(new_filename, 'w', newline="") as csvfile:
+            chamber_name = file.split(
+                f"_{classifier_name}"
+            )[0]
+
+            # --------------------------------------------------
+            # WingExt identity is REQUIRED
+            # --------------------------------------------------
+
+            if chamber_name not in male_by_chamber:
+
+                print(
+                    f"SKIPPING {file}: "
+                    f"no valid WingExt file available "
+                    f"to determine male identity."
+                )
+
+                continue
+
+            # --------------------------------------------------
+            # Read classifier file
+            # --------------------------------------------------
+
+            rows = []
+
+            with open(file, "r") as csvfile:
+                csvreader = csv.reader(csvfile)
+
+                for row in csvreader:
+                    rows.append(row)
+
+            new_row = [f"{file}_Fly1_Fly2"]
+
+            # --------------------------------------------------
+            # Process Fly1/Fly2 row pairs
+            # --------------------------------------------------
+
+            for n in range(0, len(rows), 2):
+
+                if n + 1 >= len(rows):
+                    break
+
+                bouts1 = 0
+                bouts2 = 0
+
+                for col in rows[n]:
+                    if col != "NaN":
+                        bouts1 += 1
+
+                for col in rows[n + 1]:
+                    if col != "NaN":
+                        bouts2 += 1
+
+                # Add Fly1
+                new_row.append(bouts1)
+
+                # Add Fly2
+                new_row.append(bouts2)
+
+                # Add MALE
+                if male_by_chamber[chamber_name] == 0:
+                    new_row.append(bouts1)
+
+                else:
+                    new_row.append(bouts2)
+
+            new_rows.append(new_row)
+
+        # --------------------------------------------------
+        # Save compiled CSV
+        # --------------------------------------------------
+
+        with open(new_filename, "w", newline="") as csvfile:
+
             csvwriter = csv.writer(csvfile)
             csvwriter.writerows(new_rows)
-        print(f"Compiled CSV file created: {new_filename}")
+
+        print(
+            f"{new_filename}: "
+            f"{len(new_rows)} chambers compiled"
+        )
 
 def main():
-    while True:
-        root_path = input("What is the complete path of the parent folder containing all videos and JAABA folders?")
-        rename_files_recursively(root_path)
-        extract_lunge_frames_to_csv(root_path)
-        compile_csv_files(root_path)
-        continue
+    root_path = input(
+        "What is the complete path of the parent folder containing all videos and JAABA folders? "
+    ).strip().strip("'\"")
+
+    print(f"Using folder: {root_path}")
+
+    rename_files_recursively(root_path)
+    extract_lunge_frames_to_csv(root_path)
+    compile_csv_files(root_path)
+
 
 if __name__ == "__main__":
     main()

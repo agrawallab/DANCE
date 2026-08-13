@@ -4,7 +4,34 @@ import csv
 import os
 import glob
 import numpy
-import matlab.engine
+import scipy.io
+import numpy as np
+
+def sheet_maker(folder_path):
+	"""Reads JAABA .mat score files in folder_path and writes one CSV per .mat file.
+	Row 0 = fly1 bout frame numbers, row 1 = fly2 bout frame numbers (columns).
+	Uses allScores.scores > 0 to find bout frames, offset by tStart."""
+	for mat_file in glob.glob(os.path.join(folder_path, '*.mat')):
+		base_name = os.path.splitext(os.path.basename(mat_file))[0]
+		out_csv = os.path.join(folder_path, base_name + ".csv")
+		try:
+			data = scipy.io.loadmat(mat_file, squeeze_me=True, struct_as_record=False)
+			all_scores = data['allScores']
+			if hasattr(all_scores, 'scores') and hasattr(all_scores, 'tStart'):
+				t_start = np.atleast_1d(all_scores.tStart)
+				with open(out_csv, 'w', newline='') as f:
+					writer = csv.writer(f)
+					for fly_idx in range(2):
+						fly_scores = np.atleast_1d(all_scores.scores[fly_idx]).flatten()
+						bout_frames = (np.where(fly_scores > 0)[0] + int(t_start[fly_idx])).tolist()
+						writer.writerow(bout_frames)
+			else:
+				print(f"File {mat_file} does not contain expected fields: scores or tStart")
+		except NotImplementedError:
+			print(f"File {mat_file} is MATLAB v7.3 (HDF5) format — install h5py to read it")
+		except Exception as e:
+			print(f"Error processing file {mat_file}: {e}")
+
 
 while True:
 	#Renaming_scorefiles
@@ -17,6 +44,8 @@ while True:
 		except:
 			print("score_files folder already exists")
 		for upperdir in os.listdir(root_path):
+			if upperdir.startswith('.'):
+				continue
 			upperdir_path = os.path.join(root_path, upperdir)
 			new_folder = os.path.join(root_path + str("/") + "score_files" + str("/") + upperdir)
 			if not upperdir == "score_files":
@@ -24,24 +53,16 @@ while True:
 					os.mkdir(new_folder)
 				except:
 					print( new_folder + " folder already exists in score_files folder")
-			for dir in os.listdir(upperdir_path):
-				dir_path = os.path.join(upperdir_path, dir)
-				if os.path.isdir(dir_path):
-					for subdir in os.listdir(dir_path):
-						subdir_path = os.path.join(dir_path, subdir)
-						if os.path.isdir(subdir_path):
-							for folder in os.listdir(subdir_path):
-								folder_path = os.path.join(subdir_path, folder)
-								if os.path.isdir(folder_path):
-									for file in os.listdir(folder_path):
-										file_path = os.path.join(folder_path, file)
-										name, extension = os.path.splitext(file)
-										if "Lunge" in name:
-											new_name = os.path.join(root_path + str("/") + "score_files" + str("/") + upperdir + str("/") + dir + "_" + name + extension)
-											# os.rename(file_path, new_name)
-											print (new_name)
-											shutil.copy(file_path, new_name)
-											continue
+			for file in os.listdir(upperdir_path):
+				if file.startswith('.'):
+					continue
+				file_path = os.path.join(upperdir_path, file)
+				if os.path.isfile(file_path):
+					name, extension = os.path.splitext(file)
+					if "Lunge" in name:
+						new_name = os.path.join(new_path, upperdir, upperdir + "_" + name + extension)
+						print(new_name)
+						shutil.copy(file_path, new_name)
 
 		print(f"Score files were renamed and copied to {root_path}")
 
@@ -54,9 +75,7 @@ while True:
 	for upperdir in os.listdir(root_path + str("/") + "score_files"):
 		if os.path.isdir(root_path + str("/") + "score_files" + str("/") + upperdir):
 			os.chdir(os.path.join(root_path + str("/") + "score_files" + str("/") + upperdir))
-			eng = matlab.engine.start_matlab()
-			eng.SheetMaker(nargout=0)
-			eng.quit()
+			sheet_maker(os.path.join(root_path, "score_files", upperdir))
 
 	#Lunge counting and compiling into single csv sheet 
 	path = root_path + str("/") + "score_files"
@@ -67,6 +86,7 @@ while True:
 		if os.path.isdir(directory_path):
 			os.chdir(directory_path)
 			filenames = glob.glob('*.{}'.format(extension))
+			filenames = [f for f in filenames if not f.endswith('_Fly1.csv') and not f.endswith('_Fly2.csv')]
 			print(filenames)
 			new_filename = directory + ".csv"
 			max=0
@@ -108,6 +128,7 @@ while True:
 	extension = 'csv'
 	os.chdir(path)
 	filenames = glob.glob('*.{}'.format(extension))
+	filenames = [f for f in filenames if not f.endswith('_Fly1.csv') and not f.endswith('_Fly2.csv')]
 	print(filenames)
 	new_filename = "compiled.csv"
 	new_rows = []
@@ -130,9 +151,10 @@ while True:
 			for col in rows[n]:
 				if col != "NaN":
 						lunges = lunges + 1
-			for col in rows[n+1]:
-				if col != "NaN":
-						lunges = lunges + 1
+			if n+1 < len(rows):
+				for col in rows[n+1]:
+					if col != "NaN":
+							lunges = lunges + 1
 			new_row.append(lunges)   
 
 		new_rows.append(new_row)

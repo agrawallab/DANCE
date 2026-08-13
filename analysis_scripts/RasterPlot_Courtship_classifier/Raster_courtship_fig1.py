@@ -1,11 +1,21 @@
 import os
+import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 
-# Load the workbook
-workbook_path = '/DANCE/Raster/Courtship/Courtship Raster Plot Figure 1.xlsx'
+# Parse command-line arguments
+# Usage: python Raster_courtship_fig1.py /path/to/data.xlsx [/path/to/output_folder]
+parser = argparse.ArgumentParser(description="Generate courtship raster plot from Excel workbook.")
+parser.add_argument("workbook_path",  help="Path to the input Excel file (.xlsx)")
+parser.add_argument("output_dir",     help="Folder where PNG and PDF plots will be saved",
+                    nargs="?",        default=None)
+args = parser.parse_args()
+
+workbook_path  = args.workbook_path
+# If no output folder is given, save plots next to the input file
+output_directory = args.output_dir if args.output_dir else os.path.dirname(os.path.abspath(workbook_path))
 
 workbook = pd.ExcelFile(workbook_path)
 
@@ -101,7 +111,6 @@ for ax in axs:
     ax.axvline(x=15, color='black', linewidth=1)
 
 # Save the figure as both PNG and PDF with 300 DPI
-output_directory = '/DANCE/Raster/Courtship'
 base_name = os.path.splitext(os.path.basename(workbook_path))[0]
 plt.savefig(os.path.join(output_directory, f"{base_name}_aligned_raster_plot_og.png"), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(output_directory, f"{base_name}_aligned_raster_plot_og.pdf"), bbox_inches='tight', dpi=300)

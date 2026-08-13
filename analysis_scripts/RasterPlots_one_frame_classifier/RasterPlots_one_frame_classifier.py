@@ -21,10 +21,10 @@ fly1_columns = ['Groundtruth_Fly1', 'DANCE_Fly1', 'CADABRA_Fly1', 'Divider_Fly1'
 fly2_columns = ['Groundtruth_Fly2', 'DANCE_Fly2', 'CADABRA_Fly2', 'Divider_Fly2']
 
 # Combine Fly 1 and Fly 2 data for each type, with error handling for missing columns
-Groundtruth_frames = pd.concat([df['Groundtruth_Fly1'], df['Groundtruth_Fly2']] if 'Groundtruth_Fly2' in df.columns else df['Groundtruth_Fly1']).dropna().values.flatten()
-dance_frames = pd.concat([df['DANCE_Fly1'], df['DANCE_Fly2']] if 'DANCE_Fly2' in df.columns else df['DANCE_Fly1']).dropna().values.flatten()
-cadabra_frames = pd.concat([df['CADABRA_Fly1'], df['CADABRA_Fly2']] if 'CADABRA_Fly2' in df.columns else df['CADABRA_Fly1']).dropna().values.flatten()
-divider_frames = pd.concat([df['Divider_Fly1'], df['Divider_Fly2']] if 'Divider_Fly2' in df.columns else df['Divider_Fly1']).dropna().values.flatten()
+Groundtruth_frames = pd.concat([df['Groundtruth_Fly1'], df['Groundtruth_Fly2']] if 'Groundtruth_Fly2' in df.columns else [df['Groundtruth_Fly1']]).dropna().values.flatten()
+dance_frames = pd.concat([df['DANCE_Fly1'], df['DANCE_Fly2']] if 'DANCE_Fly2' in df.columns else [df['DANCE_Fly1']]).dropna().values.flatten()
+cadabra_frames = pd.concat([df['CADABRA_Fly1'], df['CADABRA_Fly2']] if 'CADABRA_Fly2' in df.columns else [df['CADABRA_Fly1']]).dropna().values.flatten()
+divider_frames = pd.concat([df['Divider_Fly1'], df['Divider_Fly2']] if 'Divider_Fly2' in df.columns else [df['Divider_Fly1']]).dropna().values.flatten()
 
 # Convert frame numbers to time in minutes (assuming 30 fps)
 frame_rate = 30

@@ -3,9 +3,14 @@ library(ggplot2)
 library(tidyverse)
 library(dplyr)
 
-# Set working directories
-input_dir <- "~/Documents/DANCE/Modified tables"
-output_dir <- "~/Documents/DANCE/modified tables"
+# Parse command-line arguments
+# Usage: Rscript Classifier_lunges_metrics.R /path/to/input/folder [/path/to/output/folder]
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 1) stop("Usage: Rscript Classifier_lunges_metrics.R <input_folder> [<output_folder>]")
+# Folder containing the input CSV files
+input_dir  <- args[1]
+# Folder where output CSVs and log will be saved (defaults to metrics_output/ inside input folder)
+output_dir <- if (length(args) >= 2) args[2] else file.path(input_dir, "metrics_output")
 
 # Ensure the output directory exists
 if (!dir.exists(output_dir)) {
@@ -222,5 +227,6 @@ write.csv(overall_metrics, overall_metrics_output_file, row.names = FALSE)
 cat("Overall metrics saved at:", overall_metrics_output_file, "\n")
 
 # Optional: Print the lengths of the vectors for debugging purposes
-print(length(merged_gt), length(merged_dance), length(merged_cad), length(merged_div))
+cat("Vector lengths — gt:", length(merged_gt), "dance:", length(merged_dance),
+    "cad:", length(merged_cad), "div:", length(merged_div), "\n")
 

@@ -1,4 +1,9 @@
-mainFolder = 'E:\Paulami\All cropped videos\test_SH\JAABAPlot_1';
+% ── USER SETTING ──────────────────────────────────────────────────────────
+% Set mainFolder to the folder that contains your JAABA output subfolders.
+% Each subfolder should contain one or more .mat files with an allScores
+% structure (produced by JAABA).  Edit this line before running the script.
+mainFolder = '/path/to/your/JAABA/output/folder';
+% ──────────────────────────────────────────────────────────────────────────
 subfolders = dir(mainFolder);
 subfolders = subfolders([subfolders.isdir] & ~startsWith({subfolders.name}, '.'));
 
