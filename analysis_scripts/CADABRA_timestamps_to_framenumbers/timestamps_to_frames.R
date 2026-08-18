@@ -2,11 +2,19 @@
 library(tidyverse)
 library(dplyr)
 
-# Set the working directory
-setwd("~/Documents/Scripts/CADABRA/Tables/tables_0326")
+# Parse command-line arguments
+# Usage: Rscript timestamps_to_frames.R /path/to/folder [filename.txt]
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 1) stop("Usage: Rscript timestamps_to_frames.R <input_folder> [filename.txt]")
+# The folder that contains your CADABRA .txt timestamp files
+input_folder  <- args[1]
+# Optional: specific filename for the single-file section (defaults to the original name)
+single_file   <- if (length(args) >= 2) args[2] else "Lunges_dates_A2p07.txt"
+
+setwd(input_folder)
 
 # Read the file into a data frame, specifying the correct separator
-lunges_data <- read.table("Lunges_dates_A2p07.txt", header = FALSE, skip = 3, fill = TRUE)
+lunges_data <- read.table(single_file, header = FALSE, skip = 3, fill = TRUE)
 
 # Remove unnecessary columns (assuming the relevant data is in the second and third columns)
 lunges_data <- lunges_data[, 1:2]
@@ -46,8 +54,11 @@ write.csv(df_modified, "lunges_A2_p07_frames.csv", row.names = FALSE)
 
 ##################################### In bulk ################################################
 
-# Set the working directory to the folder containing your .txt files
-setwd("~/Documents/DANCE/CADABRA/CADABRA_framedata/Tables/tables_0401")
+# The bulk section processes all .txt files in the same folder supplied above.
+# To use a different folder for bulk processing, pass it as a third argument:
+#   Rscript timestamps_to_frames.R /single/file/folder Lunges_dates.txt /bulk/folder
+bulk_folder <- if (length(args) >= 3) args[3] else input_folder
+setwd(bulk_folder)
 
 # List all .txt files in the directory
 file_list <- list.files(pattern = "*.txt")
